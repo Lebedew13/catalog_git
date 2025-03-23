@@ -1,0 +1,611 @@
+<?php
+session_start();
+header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+include 'connectdb.php';
+//include 'functions/selects.php';
+include 'functions/order.php';
+
+
+
+if (isset($_GET['showid'])) {
+    $_SESSION['showid'] = $_GET['showid'];
+} 
+?>
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IDBC Show | Регистрация</title>
+    <link rel="stylesheet" href="./css/normalize.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/media.css">
+</head>
+<!-- <script src="./js/main.js" type="text/javascript"></script> -->
+<script src="./js/index.js" type="text/javascript">
+</script>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header__cont">        
+                <div class="header__text">
+                    <h1 class="header__text-h1">
+                        INTERNATIONAL DOG BREEDERS CLUB
+                    </h1>
+                    <p class="header__text-descr">
+                        Интернациональный клуб заводчиков собак
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="main">
+        <div class="container">
+         
+<?php
+// Проверка на наличие showid в сессии
+// Проверяем, существует ли showid в сессии
+if (isset($_SESSION['showid'])) {
+    $showid = $_SESSION['showid'];
+} else {
+    // Если переменная не установлена, перенаправляем на главную или страницу ошибки
+    //header("Location: selectShow.php");  // Например, перенаправление на главную
+    exit;
+}
+
+$showid = $_SESSION['showid'];
+$query = "SELECT DISTINCT breed, class_breed, type_breed, gender FROM `idbc_dog` WHERE `show_idbc` = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $showid);
+$stmt->execute();
+$result = $stmt->get_result();
+
+$breeds = $classes = $types = $genders = [];
+while ($row = $result->fetch_assoc()) {
+    $breeds[$row['breed']] = $row['breed'];
+    $classes[$row['class_breed']] = $row['class_breed'];
+    $types[$row['type_breed']] = $row['type_breed'];
+    $genders[$row['gender']] = $row['gender'];
+}
+
+$selected_breed = $_GET['breed'] ?? 'all';
+$filter_class = $_GET['filter_class'] ?? 'all';
+$filter_type = $_GET['filter_type'] ?? 'all';
+$filter_gender = $_GET['filter_gender'] ?? 'all';
+
+$query = "SELECT * FROM `idbc_dog` WHERE `show_idbc` = ?";
+$params = [$showid];
+$types_str = "i";
+
+if ($selected_breed !== 'all') {
+    $query .= " AND `breed` = ?";
+    $params[] = $selected_breed;
+    $types_str .= "s";
+}
+if ($filter_class !== 'all') {
+    $query .= " AND `class_breed` = ?";
+    $params[] = $filter_class;
+    $types_str .= "s";
+}
+if ($filter_type !== 'all') {
+    $query .= " AND `type_breed` = ?";
+    $params[] = $filter_type;
+    $types_str .= "s";
+}
+if ($filter_gender !== 'all') {
+    $query .= " AND `gender` = ?";
+    $params[] = $filter_gender;
+    $types_str .= "s";
+}
+
+$stmt = $conn->prepare($query);
+$stmt->bind_param($types_str, ...$params);
+$stmt->execute();
+$result = $stmt->get_result();
+?>
+            <div class="catalog flex">                
+                <p>
+                    <a href="php/referi.php?showid=<?php echo $_SESSION['showid'] ?>">Судьи</a>
+                    <a href="exit.php">Выйти</a>
+                </p>
+                <h3 class="main__title">Каталог</h3>     
+                <div class="catalog__showName flex">
+                    <p>
+                        <?php
+                        $sql = "SELECT * FROM `show_idbc` WHERE `id` = '{$_SESSION['showid']}'";
+                        $show = $conn->query($sql);
+                            foreach($show as $row){
+                          
+                            }
+                            echo $row['name_show'];
+                        ?>
+                    </p>    
+                    <p>
+                        <?php echo date("d.m.Y", strtotime($row['date_show']))?>
+                    </p>
+                </div>
+                <div class="catalog__experts flex">
+                    <?php
+                        $sql = "SELECT * FROM `experts` WHERE `show_id` = '{$_SESSION['showid']}'";
+                        $show = $conn->query($sql);
+                            foreach($show as $row){
+                                echo "<p>{$row['lastname']}\n{$row['firstname']}</p>";
+                            }                           
+                        ?>
+                </div>
+            </div>
+
+             
+            <div class="main__dog flex">
+            <div class="main__order flex">
+                <h4>Выберите породу</h4>
+                <?php
+                echo "<a href='?showid={$_SESSION['showid']}&breed=all'>Показать все</a>";
+                    // Перебираем породы
+                    foreach($breeds as $breed){
+                        // Формируем ссылку с параметрами showid и breed
+                        echo "<a href='?showid={$_SESSION['showid']}&breed=" . urlencode($breed) . "'>" . htmlspecialchars($breed) . "</a>";
+                    }    
+                    // Ссылка "Показать все" — сбрасываем breed в URL, чтобы отображать все породы
+                    
+                ?>
+            </div>
+
+    <div class="main__list-dog">
+        
+    <?php
+    
+    if (isset($_GET['breed'])) {
+        $selected_breed = $_GET['breed'];
+        if($selected_breed === 'all'){
+            echo "<h3>Все породы</h3>";
+        }else{
+            echo "<h3>".$selected_breed."</h3>";
+        }
+        echo "<ul class='list__dog list-reset flex'>";
+        
+        // Если выбрана опция "Показать все"
+        if ($selected_breed === 'all') {
+            ?>
+            
+            <div>
+                <form method="GET">
+                    <input type="text" hidden value="<?php echo htmlspecialchars($_SESSION['showid'])?>">
+                    <input type="hidden" name="breed" value="<?php echo htmlspecialchars($selected_breed); ?>">
+                    <select name="filter_class">
+                
+                        <?php foreach($classes as $class): ?>
+                        <option value="<?php echo htmlspecialchars($class)?>"><?php echo htmlspecialchars($class)?></option>
+                        <?php endforeach; ?>
+                    </select> 
+                
+
+                    <select name="filter_type">
+                     
+                        <?php foreach($types as $type): ?>
+                        <option value="<?php echo htmlspecialchars($type)?>"><?php echo htmlspecialchars($type)?></option>
+                        <?php endforeach; ?>
+                    </select>
+                
+                    <select name="filter_gender">
+                    
+                        <?php foreach($genders as $gender): ?>
+                        <option value="<?php echo htmlspecialchars($gender)?>"><?php echo htmlspecialchars($gender)?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <input type="submit">
+                </form>
+            </div>
+            <?php
+                $selected_breed = $_GET['breed'] ?? 'all';
+                $filter_class = $_GET['filter_class'] ?? 'all';
+                $filter_type = $_GET['filter_type'] ?? 'all';
+                $filter_gender = $_GET['filter_gender'] ?? 'all';
+
+                echo "<h3>" . ($selected_breed === 'all' ? "Все породы" : htmlspecialchars($selected_breed)) . "</h3>";
+                echo "<ul class='list__dog list-reset flex'>";
+
+                $query = "SELECT * FROM `idbc_dog` WHERE `show_idbc` = ?";
+                $params = [$showid];
+                $types_str = "i";
+
+                if ($selected_breed !== 'all') {
+                    $query .= " AND `breed` = ?";
+                    $params[] = $selected_breed;
+                    $types_str .= "s";
+                }
+                
+                if ($filter_class !== 'all') {
+                    $query .= " AND `class_breed` = ?";
+                    $params[] = $filter_class;
+                    $types_str .= "s";
+                }
+                if ($filter_type !== 'all') {
+                    $query .= " AND `type_breed` = ?";
+                    $params[] = $filter_type;
+                    $types_str .= "s";
+                }
+                if ($filter_gender !== 'all') {
+                    $query .= " AND `gender` = ?";
+                    $params[] = $filter_gender;
+                    $types_str .= "s";
+                }
+
+                $stmt = $conn->prepare($query);
+                $stmt->bind_param($types_str, ...$params);
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+          
+            // Запрос всех собак
+            $query = "SELECT * FROM `idbc_dog` WHERE `show_idbc` = ?";
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param("i", $_SESSION['showid']);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+                   $dogsByBreedClassTypeGender = [];
+                foreach ($result as $dog) {
+                    $breed = $dog['breed'];
+                    $class = $dog['class_breed'];
+                    $type = $dog['type_breed']; // Тип породы
+                    $gender = strtolower($dog['gender']); // Пол в нижнем регистре
+                    
+                    // Группируем по порода → класс → тип → пол
+                    $dogsByBreedClassTypeGender[$breed][$class][$type][$gender][] = $dog;
+                }
+                
+               
+                
+                foreach ($dogsByBreedClassTypeGender as $breed => $classes) {
+                    echo '<div class="catalog__dogList flex">';
+                    echo "<h2 class=\"catalog__breed\">$breed</h2>";
+                
+                    // Перебираем классы для каждой породы
+                    foreach ($classes as $class => $types) {
+                        echo "<h3 class=\"catalog_class\">$class</h3>";
+                
+                        // Перебираем типы для каждого класса
+                        foreach ($types as $type => $genders) {
+                            if($type != 'none'){
+                            echo "<h4 class=\"catalog_type\">$type</h4>";
+                            }
+                            // Перебираем полы для каждого типа
+                            foreach ($genders as $gender => $dogs) {
+                                // Название для пола
+                                $genderTitle = ($gender === 'сука') ? 'Суки' : 'Кобели';
+                                echo "<h5 class=\"catalog__gender\">$genderTitle</h5>";
+                
+                                // Выводим данные для каждой собаки
+                                foreach ($dogs as $dog) {
+                                    echo '<div class="catalog__blockDog flex">
+                                            <div class="catalog__blockDog-text flex">
+                                                <p id="number__pp">'.$dog['id'].'</p>
+                                                <p>'.$dog['name_dog'].'</p>
+                                            </div>            
+                                            <p>
+                                                ( '.$dog['color'].', '.$dog['breeder'].', '.$dog['owner'].' )
+                                            </p>
+                                        </div>';
+                        
+                                }
+                            }
+                        }
+                    }
+                    echo '</div>'; // Закрываем блок породы
+                }
+
+
+
+                // while ($row = $result->fetch_assoc()) {
+                //     echo "<li class='list__dog-item flex'>";
+                //     echo "<p>Кличка: " . htmlspecialchars($row['name_dog'], ENT_QUOTES, 'UTF-8') . "</p>";
+                //     echo "<p>Порода: " . htmlspecialchars($row['breed'], ENT_QUOTES, 'UTF-8') . "</p>";
+                //     echo "<a href='dogs.php?showid={$_SESSION['showid']}&id={$row['id']}'>Подробнее</a>";
+                //     echo "</li>";
+                // }
+            } else {
+                echo "<p>Собаки не найдены.</p>";
+            }
+        } else {
+
+            ?>
+            
+            
+            <div>
+            <form method="GET">
+                    <input type="text" hidden value="<?php echo htmlspecialchars($_SESSION['showid'])?>">
+                    <input type="hidden" name="breed" value="<?php echo htmlspecialchars($selected_breed); ?>">
+                    <select name="filter_class">
+                        
+                        <?php foreach($classes as $class): ?>
+                        <option value="<?php echo htmlspecialchars($class)?>"><?php echo htmlspecialchars($class)?></option>
+                        <?php endforeach; ?>
+                    </select> 
+                
+                    <?php if($selected_breed === 'Американсикй булли'){ ?>
+                    <select name="filter_type">
+                       
+                        <?php foreach($types as $type): ?>
+                        <option selected value="<?php echo htmlspecialchars($type)?>"><?php echo htmlspecialchars($type)?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <?php } ?>
+                
+                    <select name="filter_gender">
+                        
+                        <?php foreach($genders as $gender): ?>
+                        <option value="<?php echo htmlspecialchars($gender)?>"><?php echo htmlspecialchars($gender)?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <input type="submit">
+                </form>
+            </div
+            
+
+            <?php
+            // Фильтруем собак по породе
+            $query = "SELECT * FROM `idbc_dog` WHERE `show_idbc` = ?";
+$params = [$showid];
+$types_str = "i";
+
+if ($selected_breed !== 'all') {
+    $query .= " AND `breed` = ?";
+    $params[] = $selected_breed;
+    $types_str .= "s";
+}
+if ($filter_class !== 'all') {
+    $query .= " AND `class_breed` = ?";
+    $params[] = $filter_class;
+    $types_str .= "s";
+}
+if ($filter_type !== 'all') {
+    $query .= " AND `type_breed` = ?";
+    $params[] = $filter_type;
+    $types_str .= "s";
+}
+if ($filter_gender !== 'all') {
+    $query .= " AND `gender` = ?";
+    $params[] = $filter_gender;
+    $types_str .= "s";
+}
+
+$stmt = $conn->prepare($query);
+$stmt->bind_param($types_str, ...$params);
+$stmt->execute();
+$result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+  $dogsByBreedClassTypeGender = [];
+                foreach ($result as $dog) {
+                    $breed = $dog['breed'];
+                    $class = $dog['class_breed'];
+                    $type = $dog['type_breed']; // Тип породы
+                    $gender = strtolower($dog['gender']); // Пол в нижнем регистре
+                    
+                    // Группируем по порода → класс → тип → пол
+                    $dogsByBreedClassTypeGender[$breed][$class][$type][$gender][] = $dog;
+                }
+                
+                $counter = 1; // Общий счётчик
+                
+                foreach ($dogsByBreedClassTypeGender as $breed => $classes) {
+                    echo '<div class="catalog__dogList flex">';
+                
+                
+                    // Перебираем классы для каждой породы
+                    foreach ($classes as $class => $types) {
+                        echo "<h3 class=\"catalog_class\">$class</h3>";
+                
+                        // Перебираем типы для каждого класса
+                        foreach ($types as $type => $genders) {
+                            if($type != 'none'){
+                            echo "<h4 class=\"catalog_type\">$type</h4>";
+                            }
+                            // Перебираем полы для каждого типа
+                            foreach ($genders as $gender => $dogs) {
+                                // Название для пола
+                                $genderTitle = ($gender === 'сука') ? 'Суки' : 'Кобели';
+                                echo "<h5 class=\"catalog__gender\">$genderTitle</h5>";
+                
+                                // Выводим данные для каждой собаки
+                                foreach ($dogs as $dog) {
+                                    echo '<div class="catalog__blockDog flex">
+                                            <div class="catalog__blockDog-text flex">
+                                                <p id="number__pp">'.$counter.'</p>
+                                                <p>'.$dog['name_dog'].'</p>
+                                            </div>            
+                                            <p>
+                                                ( '.$dog['color'].', '.$dog['breeder'].', '.$dog['owner'].' )
+                                            </p>
+                                        </div>';
+                                    $counter++; // Увеличиваем общий счётчик
+                                }
+                            }
+                        }
+                    }
+                    echo '</div>'; // Закрываем блок породы
+                }
+
+
+
+
+                // while ($row = $result->fetch_assoc()) {
+                //     echo "<li class='list__dog-item flex'>";
+                //     echo "<p>Кличка: " . htmlspecialchars($row['name_dog'], ENT_QUOTES, 'UTF-8') . "</p>";
+                //     echo "</li>";
+                // }
+            } else {
+                echo "<p>Собаки данной породы не найдены.</p>";
+            }
+        }
+    } else {
+        ?>
+            
+            <div>
+                <form method="GET">
+                    <input type="text" hidden value="<?php echo htmlspecialchars($_SESSION['showid'])?>">
+                    <select name="filter_class">
+                        <option value="all">Все классы</option>
+                        <?php foreach($classes as $class): ?>
+                        <option value="<?php echo htmlspecialchars($class)?>"><?php echo htmlspecialchars($class)?></option>
+                        <?php endforeach; ?>
+                    </select> 
+                
+                    <select name="filter_type">
+                        <option value="all">Тип</option>
+                        <?php foreach($types as $type): ?>
+                        <option value="<?php echo htmlspecialchars($type)?>"><?php echo htmlspecialchars($type)?></option>
+                        <?php endforeach; ?>
+                    </select>
+                
+                    <select name="filter_gender">
+                        <option value="all">Пол</option>
+                        <?php foreach($genders as $gender): ?>
+                        <option value="<?php echo htmlspecialchars($gender)?>"><?php echo htmlspecialchars($gender)?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <input type="submit">
+                </form>
+            </div>
+            <?php
+                $selected_breed = $_GET['breed'] ?? 'all';
+                $filter_class = $_GET['filter_class'] ?? 'all';
+                $filter_type = $_GET['filter_type'] ?? 'all';
+                $filter_gender = $_GET['filter_gender'] ?? 'all';
+
+                echo "<h3>" . ($selected_breed === 'all' ? "Все породы" : htmlspecialchars($selected_breed)) . "</h3>";
+                echo "<ul class='list__dog list-reset flex'>";
+
+                $query = "SELECT * FROM `idbc_dog` WHERE `show_idbc` = ?";
+                $params = [$showid];
+                $types_str = "i";
+
+                if ($selected_breed !== 'all') {
+                    $query .= " AND `breed` = ?";
+                    $params[] = $selected_breed;
+                    $types_str .= "s";
+                }
+                if ($filter_class !== 'all') {
+                    $query .= " AND `class_breed` = ?";
+                    $params[] = $filter_class;
+                    $types_str .= "s";
+                }
+                if ($filter_type !== 'all') {
+                    $query .= " AND `type_breed` = ?";
+                    $params[] = $filter_type;
+                    $types_str .= "s";
+                }
+                if ($filter_gender !== 'all') {
+                    $query .= " AND `gender` = ?";
+                    $params[] = $filter_gender;
+                    $types_str .= "s";
+                }
+
+                $stmt = $conn->prepare($query);
+                $stmt->bind_param($types_str, ...$params);
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+          
+            // Запрос всех собак
+            $query = "SELECT * FROM `idbc_dog` WHERE `show_idbc` = ?";
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param("i", $_SESSION['showid']);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+                   $dogsByBreedClassTypeGender = [];
+                foreach ($result as $dog) {
+                    $breed = $dog['breed'];
+                    $class = $dog['class_breed'];
+                    $type = $dog['type_breed']; // Тип породы
+                    $gender = strtolower($dog['gender']); // Пол в нижнем регистре
+                    
+                    // Группируем по порода → класс → тип → пол
+                    $dogsByBreedClassTypeGender[$breed][$class][$type][$gender][] = $dog;
+                }
+                
+               
+                
+                foreach ($dogsByBreedClassTypeGender as $breed => $classes) {
+                    echo '<div class="catalog__dogList flex">';
+                    echo "<h2 class=\"catalog__breed\">$breed</h2>";
+                
+                    // Перебираем классы для каждой породы
+                    foreach ($classes as $class => $types) {
+                        echo "<h3 class=\"catalog_class\">$class</h3>";
+                
+                        // Перебираем типы для каждого класса
+                        foreach ($types as $type => $genders) {
+                            if($type != 'none'){
+                            echo "<h4 class=\"catalog_type\">$type</h4>";
+                            }
+                            // Перебираем полы для каждого типа
+                            foreach ($genders as $gender => $dogs) {
+                                // Название для пола
+                                $genderTitle = ($gender === 'сука') ? 'Суки' : 'Кобели';
+                                echo "<h5 class=\"catalog__gender\">$genderTitle</h5>";
+                
+                                // Выводим данные для каждой собаки
+                                foreach ($dogs as $dog) {
+                                    echo '<div class="catalog__blockDog flex">
+                                            <div class="catalog__blockDog-text flex">
+                                                <p id="number__pp">'.$dog['id'].'</p>
+                                                <p>'.$dog['name_dog'].'</p>
+                                            </div>            
+                                            <p>
+                                                ( '.$dog['color'].', '.$dog['breeder'].', '.$dog['owner'].' )
+                                            </p>
+                                        </div>';
+                        
+                                }
+                            }
+                        }
+                    }
+                    echo '</div>'; // Закрываем блок породы
+                }
+
+
+
+                // while ($row = $result->fetch_assoc()) {
+                //     echo "<li class='list__dog-item flex'>";
+                //     echo "<p>Кличка: " . htmlspecialchars($row['name_dog'], ENT_QUOTES, 'UTF-8') . "</p>";
+                //     echo "<p>Порода: " . htmlspecialchars($row['breed'], ENT_QUOTES, 'UTF-8') . "</p>";
+                //     echo "<a href='dogs.php?showid={$_SESSION['showid']}&id={$row['id']}'>Подробнее</a>";
+                //     echo "</li>";
+                // }
+            } else {
+                echo "<p>Собаки не найдены.</p>";
+            }
+    }
+?>
+        </ul>
+    </div>
+    </div>
+</div>
+
+
+            
+            </div>
+
+            </div>
+    </main>
+    <footer class="footer">
+        <div class="container">
+
+                    <div class="footer__descr flex">
+                    <h3 class="footer__descr-h3">ANO "IDBC" - АНО "ИКЗС"</h3>
+                    <h4 class="footer__descr-h3">Desing by Lebedev</h4>
+                    </div>
+                    
+        </div>
+    </footer>
+</body>
+</html>

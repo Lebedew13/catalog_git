@@ -1,0 +1,8 @@
+AuthName 'Restricted Area'
+AuthType Basic
+AuthUserFile /home/i/idbcdog/.authfile
+require valid-user
+
+Options +ExecCGI
+DirectoryIndex awstats.pl
+

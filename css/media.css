@@ -1,0 +1,105 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 4 version
+*/
+
+/* Адаптивность для мобильных устройств */
+@media(max-width: 1024px){
+  .main__form-doc{
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .header__text h1 {
+      font-size: 2.2em;
+  }
+
+  .main__title {
+      font-size: 2em;
+  }
+
+  .main__form {
+      gap: 15px;
+  }
+
+  .main__form-input {
+      font-size: 1em;
+  }
+
+  .main__form-input[type="submit"] {
+      font-size: 1.1em;
+  }
+
+  .footer__descr h3,
+  .footer__descr h4 {
+      font-size: 1em;
+  }
+
+  
+}
+
+ /* Media Queries */
+ @media (max-width: 768px) {
+  .main__registration {
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+          -ms-flex-direction: column;
+              flex-direction: column;
+      -webkit-box-align: center;
+          -ms-flex-align: center;
+              align-items: center;
+  }
+
+  .registration__block {
+      -webkit-box-flex: 1;
+          -ms-flex: 1 1 100%;
+              flex: 1 1 100%; /* Блоки занимают всю ширину на маленьких экранах */
+      margin-bottom: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header__text-h1 {
+      font-size: 2rem;
+  }
+
+  .header__text-descr {
+      font-size: 1rem;
+  }
+
+  .main__registration-title {
+      font-size: 1.5rem;
+  }
+
+  .main__registration-descr {
+      font-size: 0.9rem;
+  }
+
+  .btn {
+      padding: 10px 20px;
+      font-size: 1rem;
+  }
+}
+
+@media (max-width: 650px) {
+  .main__form-gender{
+    gap: 20px;
+  }
+
+  .main__form-doc-left{
+    flex-direction: column;
+    gap: 10px;
+  }
+
+   .main__form-doc-right{
+    flex-direction: column;
+    gap: 10px;
+  }
+}
