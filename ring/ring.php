@@ -74,11 +74,12 @@ $res = $conn->query($sql);
                     </form>
                 </div>
                 <div>
-                    <ul>
+                    <ul class='ring-list list-reset flex'>
                     <?php
                     foreach ($res as $row){
                         // Выводим ссылки на выбор шоу
-                        echo "<li class='.ring-item'><a href='selectRing.php?showid={$row['showid']}&ringid={$row['id']}'>" . htmlspecialchars($row['name_ring'], ENT_QUOTES, 'UTF-8') . "</a>
+                        echo "<li class='ring-item'>
+                        <a href='selectRing.php?showid={$row['showid']}&ringid={$row['id']}'>" . htmlspecialchars($row['name_ring'], ENT_QUOTES, 'UTF-8') . "</a>
                         <button class='delete-ring' data-id='{$row['id']}'>Удалить</button></li>";
                     }
                 ?>

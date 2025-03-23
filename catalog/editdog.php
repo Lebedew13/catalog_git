@@ -4,9 +4,9 @@ header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
-include 'connectdb.php';
+include '../connectdb.php';
 //include 'functions/selects.php';
-include 'functions/order.php';
+include '../functions/order.php';
 
 
 
@@ -34,9 +34,9 @@ $dog_query = $conn->query($query);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IDBC Show | Регистрация</title>
-    <link rel="stylesheet" href="./css/normalize.css">
-    <link rel="stylesheet" href="./css/style.css">
-    <link rel="stylesheet" href="./css/media.css">
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/media.css">
 </head>
 <!-- <script src="./js/main.js" type="text/javascript"></script> -->
 <script src="./js/index.js" type="text/javascript"></script>

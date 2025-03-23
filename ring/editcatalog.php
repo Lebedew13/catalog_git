@@ -119,15 +119,8 @@ foreach($res as $ringList){
                 <p>
                     Внести изменения можно как здесь так и в основном каталоге!
                 </p>
-                <!-- <p>
-                    <form action="getDogList.php" class="form__listDog" method="post">
-                        <input type="hidden" name="showid" value="<?php echo $showid?>" id="showid">
-                        <input type="hidden" name="ringid" value="<?php echo $ringid?>" id="ringid">
-                    <input type="submit" id="fetchDogsBtn" value="Получить список собак">
-                    </form>
-                
-                </p> -->
-                 
+                <ul class="listDog flex list-reset">
+
                 
                 <?php
             $sql = "SELECT * FROM catalog_dog_show_{$showid}_ring_{$ringid}";
@@ -146,11 +139,18 @@ foreach($res as $ringList){
                     $breeder = $dogs['breeder'];
                     $id = $dogs['id'];
 
-                    echo "<div class='listDog'>
-                    <p>$namedog, $class, $type</p>
-                    <button class='formDogBlock' data-id='modal-$id'>Внести изменения</button>
-                    <input class='main__form-input deleteDog' id='dog-row-$id' data-id='$id' data-showid='$showid' data-ringid='$ringid' type='submit' name='action' value='Удалить'>
-                </div>
+                    echo "<li class='listDog-item flex'>
+                    <div class='dog__info flex'>
+                       <p>Кличка: $namedog, класс: $class, тип: $type</p>
+                    </div>
+                    <div class='button__block flex'>
+                        <button class='formDogBlock' data-id='modal-$id'></button>
+                        <input class='deleteDog' id='dog-row-$id' data-id='$id' data-showid='$showid' data-ringid='$ringid' type='submit' name='action' value=''>
+                    </div>
+
+
+                   
+                    </li>
             
                 <!-- Модальное окно -->
                 <div id='modal-$id' class='modal'>
@@ -196,6 +196,9 @@ foreach($res as $ringList){
                }
 
                 ?>
+            </div>
+            <div class="button__start">
+                <a class="main__form-input-a" href="../catalog/catalog.php?showid=<?php echo $showid?>&ringid=<?php echo $ringid?>">Начать ринг</a>
             </div>
         </div>
     </main>

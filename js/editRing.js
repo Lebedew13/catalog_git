@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function(){
-    $btnAddRing =  document.getElementById('addRing');
-    $formAddRing = document.getElementById('formAddRing');
+    const $btnAddRing = document.getElementById('addRing');
+    const $formAddRing = document.getElementById('formAddRing');
+
     $btnAddRing.addEventListener('click', function(){
         $formAddRing.style.display = 'flex';
     });
@@ -8,7 +9,6 @@ document.addEventListener("DOMContentLoaded", function(){
     // Закрытие модального окна
     document.querySelectorAll('.close_modal').forEach(closeButton => {
         closeButton.addEventListener('click', function () {
-            $formAddRing = document.getElementById('formAddRing');
             $formAddRing.style.display = 'none';
         });
     });
@@ -27,9 +27,16 @@ document.addEventListener("DOMContentLoaded", function(){
     form.addEventListener('submit', function (event) {
         event.preventDefault();
 
-        // Получаем значения из формы
-        const ringName = form.querySelector('input[type="text"]').value;
-        const showid = form.querySelector('input[type="hidden"]').value;
+        const nameInput = form.querySelector('input[type="text"]');
+        const showIdInput = form.querySelector('input[type="hidden"]');
+
+        if (!nameInput || !showIdInput) {
+            console.error("Ошибка: Не найдены необходимые поля в форме!");
+            return; // Останавливаем выполнение кода
+        }
+
+        const ringName = nameInput.value;
+        const showid = showIdInput.value;
 
         // Создаем данные для отправки
         const formData = {
@@ -37,53 +44,50 @@ document.addEventListener("DOMContentLoaded", function(){
             showid: showid
         };
 
-        // Отправляем запрос на сервер
+        console.log("Отправка запроса на сервер:", formData); // Лог перед отправкой
+
         fetch('editRing.php', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
         })
-        .then(response => response.json())
+        .then(response => {
+            console.log("Ответ получен:", response);
+            return response.json();
+        })
         .then(data => {
+            console.log("JSON ответ:", data);
             if (data.success) {
-                // Закрываем форму
-                $formAddRing.style.display = 'none';
-                form.querySelector('input[type="text"]').value = '';
-                // Обновляем список рингов на странице
-                const ringList = document.querySelector('.ring-item');
-                const newRingItem = document.createElement('a');
-                newRingItem.href = `selectRing.php?showid=${data.showid}&ringid=${data.ringid}`;
-                newRingItem.textContent = data.ringName;
-                ringList.appendChild(newRingItem);
-                
-                // Можно добавить сообщение об успешном добавлении ринга
-                alert('Ринг добавлен успешно!');
+                alert("Ринг добавлен!");
+                location.reload();
             } else {
-                alert('Ошибка: ' + data.message);
+                alert("Ошибка: " + data.message);
             }
         })
         .catch(error => {
-            console.error('Ошибка при отправке запроса:', error);
-            alert('Произошла ошибка. Попробуйте снова.');
+            console.error("Ошибка при отправке запроса:", error);
         });
     });
 
+    // Удаление ринга
     document.querySelectorAll('.delete-ring').forEach(button => {
         button.addEventListener('click', function () {
             const ringId = this.dataset.id;
-
+            console.log("Удаление ринга, ID:", ringId); // Лог
+    
             if (!confirm("Вы уверены, что хотите удалить этот ринг?")) return;
-
+    
             fetch('editRing.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ ringid: ringId })
             })
-            .then(response => response.json())
+            .then(response => {
+                console.log("Ответ получен:", response);
+                return response.json();
+            })
             .then(data => {
-                console.log("Ответ сервера:", data); // ← Добавлено
+                console.log("JSON ответ:", data);
                 if (data.success) {
                     this.closest('.ring-item').remove();
                     alert("Ринг удален успешно!");
@@ -93,9 +97,7 @@ document.addEventListener("DOMContentLoaded", function(){
             })
             .catch(error => {
                 console.error("Ошибка запроса:", error);
-                alert("Произошла ошибка. Попробуйте снова.");
             });
         });
     });
-
 });

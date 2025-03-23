@@ -1,5 +1,5 @@
 <?php
-    include './connectdb.php';
+    include '../connectdb.php';
 
 
     $query = "SELECT DISTINCT  `breed` FROM `idbc_dog`";

@@ -39,7 +39,11 @@ if (isset($data['name']) && isset($data['showid'])) {
     $ringId = (int) $data['ringid'];
 
     try {
-        $stmt = $conn->prepare("DELETE FROM ring WHERE ring.id = ?");
+        // Принудительно включаем foreign_key_checks
+        $conn->query("SET FOREIGN_KEY_CHECKS=1;");
+        
+        // Удаляем сам ринг
+        $stmt = $conn->prepare("DELETE FROM ring WHERE id = ?");
         $stmt->bind_param("i", $ringId);
 
         if (!$stmt->execute()) {
@@ -50,6 +54,7 @@ if (isset($data['name']) && isset($data['showid'])) {
         $stmt->close();
     } catch (Exception $e) {
         $response['message'] = $e->getMessage();
+        error_log("Ошибка удаления ринга: " . $e->getMessage());
     }
 } else {
     $response['message'] = 'Отсутствуют параметры';
