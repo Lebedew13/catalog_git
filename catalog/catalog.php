@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
             breed = breed.replace(/\n/g, '').replace(/\s{2,}/g, ' '); // Убираем символы новой строки и лишние пробелы
             
             // Очищаем от типов породы
-            breed = breed.replace(/(Стандарт|XL|Покет|Экзот)/g, '').trim(); // Убираем типы породы (можно добавить другие типы по мере необходимости)
+            breed = breed.replace(/(Классик|Стандарт|XL|Покет|Экзот|Микро)/g, '').trim(); // Убираем типы породы (можно добавить другие типы по мере необходимости)
 
             order.push({
                 breed: breed, // Теперь передаем очищенную породу
@@ -389,23 +389,21 @@ document.addEventListener("DOMContentLoaded", function() {
                 $breedsList = []; // Для группировки пород и подтипов
 
                 // Группируем данные по породам и их подтипам
+                            // Группируем данные по породам и их подтипам
                 foreach ($breed as $dog) {
-                    $breedName = $dog['breed'];      // Название породы
-                    $typeName = $dog['type_breed'];  // Подтип породы
+                    $breedName = trim($dog['breed']);      // Название породы
+                    $typeName = trim($dog['type_breed']);  // Подтип породы
 
                     // Если порода еще не добавлена, создаем для неё массив
                     if (!isset($breedsList[$breedName])) {
                         $breedsList[$breedName] = [];
                     }
 
-                    // Если подтип не "none", добавляем его в массив для этой породы
+                    // Если подтип не "none" и не пустой, добавляем его в массив для этой породы
                     if ($typeName !== "none" && !empty($typeName)) {
-                        $breedsList[$breedName][] = $typeName;
-                    }
-                    // Если подтип "none", просто не добавляем в список подтипов
-                    elseif ($typeName === "none" || empty($typeName)) {
-                        // Для пород без подтипов добавляем пустой массив
-                        $breedsList[$breedName] = [];  // Порода без подтипов
+                        if (!in_array($typeName, $breedsList[$breedName])) {
+                            $breedsList[$breedName][] = $typeName;
+                        }
                     }
                 }
                 ?>
@@ -416,12 +414,12 @@ document.addEventListener("DOMContentLoaded", function() {
                     <?php foreach ($breedsList as $breed => $types): ?>
                         <li class="breed-item" data-breed="<?= htmlspecialchars($breed); ?>">
                             
-                            <p class="breed__item-name"><?= htmlspecialchars($breed); ?></p>
+                            <a class="breed__item-name" href="#<?php echo $breed ?>"><?= htmlspecialchars($breed); ?></a>
                             <?php if (!empty($types)): // Если есть подтипы ?>
                                 <ul id="sub-breeds" class="sub-breeds list-reset flex">
                                     <?php foreach ($types as $type): ?>
                                         <li class="sub-breed" data-sub-breed="<?= htmlspecialchars($type); ?>">
-                                            <p class="subbreed__item-name"><?= htmlspecialchars($type); ?></p>
+                                            <a class="subbreed__item-name" href="#<?php echo $type ?>"><?= htmlspecialchars($type); ?></a>
                                         </li>
                                     <?php endforeach; ?>
                                 </ul>
@@ -494,10 +492,14 @@ document.addEventListener("DOMContentLoaded", function() {
             $sql = "SELECT * FROM catalog_dog_show_{$showid}_ring_{$ringid} ORDER BY position, sub_position, breed,
                 CASE  class_breed
                 WHEN 'Бэби' THEN 1
-                WHEN 'Щенки' THEN 2
-                WHEN 'Юниор' THEN 3
-                WHEN 'Взрослые' THEN 4
-                WHEN 'Зрелые' THEN 5
+                WHEN 'Щенки мини' THEN 2
+                WHEN 'Щенки макси' THEN 3
+                WHEN 'Щенки' THEN 4
+                WHEN 'Юниор мини' THEN 5
+                WHEN 'Юниор макси' THEN 6
+                WHEN 'Юниор' THEN 7
+                WHEN 'Взрослые' THEN 8
+                WHEN 'Зрелые' THEN 9
                 ELSE 999
                 END, type_breed, gender";
 
@@ -509,7 +511,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             while ($dog = $result->fetch_assoc()) {
                 $breed = trim($dog['breed']);
-                $class = trim($dog['class_breed']);
+                $class = trim($dog['class_breed']); 
                 $type = trim($dog['type_breed']);
                 $gender = trim($dog['gender']); // 'male' или 'female'
             
@@ -536,11 +538,11 @@ document.addEventListener("DOMContentLoaded", function() {
             $counter = 1;
             foreach ($dogs_by_breed as $breed => $types) {
                 echo "<div class='breed__section'>";
-                echo "<h2>Порода: " . htmlspecialchars($breed) . "</h2>";
+                echo "<h2 id='$breed'>Порода: " . htmlspecialchars($breed) . "</h2>";
                 
                 foreach ($types as $type => $classes) {
                     if($type != 'none'){
-                    echo "<h3>Тип: " . htmlspecialchars($type) . "</h3>";
+                    echo "<h3 id='$type'>Тип: " . htmlspecialchars($type) . "</h3>";
                     }
                     foreach ($classes as $class => $genders) {
                         echo "<h4>Класс: " . htmlspecialchars($class) . "</h4>";

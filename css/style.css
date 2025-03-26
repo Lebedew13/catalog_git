@@ -443,20 +443,22 @@ body{
 }
 
 .fixed__order{
-  position: sticky; /* Делаем список фиксированным относительно родителя */
-    top: 0; /* Фиксируем его вверху блока */
-    background: white; /* Чтобы список не был прозрачным */
-    z-index: 2;
-    padding: 5px;
-    flex-direction: column;
-    gap: 20px;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 2;
+  padding: 5px;
+  flex-direction: column;
+  gap: 20px;
+  max-height: 100vh;
 }
 
 .order__list{
   gap: 10px;
   word-wrap: normal;
   flex-direction: column;
-
+  max-height: 450px;
+  overflow-y: scroll;
 }
 
 
@@ -508,9 +510,6 @@ h4{
   margin-bottom: 20px;
 }
 
-.catalog a{
-  padding: 20px;
-}
 
 .editor__block{
   width: 100%;
