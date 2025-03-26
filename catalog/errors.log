@@ -2,162 +2,120 @@ Received POST data: Array
 (
     [showid] => 1
     [ringid] => 27
-    [id] => 1
+    [id] => 15
     [action] => Изменить
-    [breed] => Американский Булли
-    [type_breed] => Покет
-    [class_breed] => Взрослый
-    [name_dog] => BAILEYS FACE OF WAR222213534выаыа11
+    [breed] => Фаыа
+    [type_breed] => Поыа
+    [class_breed] => 22333
+    [name_dog] => 33йцуооо8797097уу
     [gender] => Сука
-    [color] => WHITE & CHOCOLATE 
-    [owner] => Акимов Д,222222222333w
-    [breeder] => Жиевская Н.3243d
+    [color] => 5
+    [owner] => 4
+    [breeder] => 33
 )
-showid: 1ringid: 27dogid: 1action: ИзменитьTable Name: catalog_dog_show_1_ring_27Received POST data: Array
+showid: 1ringid: 27dogid: 15action: ИзменитьTable Name: catalog_dog_show_1_ring_27Updated Data: breed: Фаыа, type_breed: Поыа, class_breed: 22333, name_dog: 33йцуооо8797097уу, gender: Сука, color: 5, owner: 4, breeder: 33Received POST data: Array
 (
     [showid] => 1
     [ringid] => 27
-    [id] => 1
+    [id] => 15
     [action] => Изменить
-    [breed] => Американский Булли
-    [type_breed] => Покет
-    [class_breed] => Взрослый
-    [name_dog] => BAILEYS FACE OF WAR222213534выаыа11
+    [breed] => Фаыа
+    [type_breed] => none
+    [class_breed] => 22333
+    [name_dog] => 33йцуооо8797097уу
     [gender] => Сука
-    [color] => WHITE & CHOCOLATE 
-    [owner] => Акимов Д,222222222333w
-    [breeder] => Жиевская Н.3243d
+    [color] => 5
+    [owner] => 4
+    [breeder] => 33
 )
-showid: 1ringid: 27dogid: 1action: ИзменитьTable Name: catalog_dog_show_1_ring_27Received POST data: Array
+showid: 1ringid: 27dogid: 15action: ИзменитьTable Name: catalog_dog_show_1_ring_27Updated Data: breed: Фаыа, type_breed: none, class_breed: 22333, name_dog: 33йцуооо8797097уу, gender: Сука, color: 5, owner: 4, breeder: 33Received POST data: Array
 (
     [showid] => 1
     [ringid] => 27
-    [id] => 1
+    [id] => 15
     [action] => Изменить
-    [breed] => Американский Булли
-    [type_breed] => Покет
-    [class_breed] => Взрослый
-    [name_dog] => BAILEYS FACE OF WAR222213534выаыа11
+    [breed] => Американский булли
+    [type_breed] => Стандарт
+    [class_breed] => 22333
+    [name_dog] => 33йцуооо8797097уу
     [gender] => Сука
-    [color] => WHITE & CHOCOLATE 
-    [owner] => Акимов Д,222222222333w
-    [breeder] => Жиевская Н.3243d
+    [color] => 5
+    [owner] => 4
+    [breeder] => 33
 )
-showid: 1ringid: 27dogid: 1action: ИзменитьTable Name: catalog_dog_show_1_ring_27Received POST data: Array
+showid: 1ringid: 27dogid: 15action: ИзменитьTable Name: catalog_dog_show_1_ring_27Updated Data: breed: Американский булли, type_breed: Стандарт, class_breed: 22333, name_dog: 33йцуооо8797097уу, gender: Сука, color: 5, owner: 4, breeder: 33Received POST data: Array
 (
     [showid] => 1
     [ringid] => 27
-    [id] => 2
+    [id] => 15
+    [action] => Изменить
+    [breed] => Американский  Булли
+    [type_breed] => Стандарт
+    [class_breed] => 22333
+    [name_dog] => 33йцуооо8797097уу
+    [gender] => Сука
+    [color] => 5
+    [owner] => 4
+    [breeder] => 33
+)
+showid: 1ringid: 27dogid: 15action: ИзменитьTable Name: catalog_dog_show_1_ring_27Updated Data: breed: Американский  Булли, type_breed: Стандарт, class_breed: 22333, name_dog: 33йцуооо8797097уу, gender: Сука, color: 5, owner: 4, breeder: 33Received POST data: Array
+(
+    [showid] => 1
+    [ringid] => 27
+    [id] => 15
     [action] => Изменить
     [breed] => Американский Булли
-    [type_breed] => Покет
-    [class_breed] => Взрослый
-    [name_dog] => LOVE BULLY COUNTRY GLINTVEIN 
+    [type_breed] => Стандарт
+    [class_breed] => 22333
+    [name_dog] => 33йцуооо8797097уу
+    [gender] => Сука
+    [color] => 5
+    [owner] => 4
+    [breeder] => 33
+)
+showid: 1ringid: 27dogid: 15action: ИзменитьTable Name: catalog_dog_show_1_ring_27Updated Data: breed: Американский Булли, type_breed: Стандарт, class_breed: 22333, name_dog: 33йцуооо8797097уу, gender: Сука, color: 5, owner: 4, breeder: 33Received POST data: Array
+(
+    [showid] => 1
+    [ringid] => 27
+    [id] => 3
+    [action] => Изменить
+    [breed] => Американский  Булли
+    [type_breed] => Экзот
+    [class_breed] => Юниор экзот
+    [name_dog] => DEADPOOL
     [gender] => Кобель
-    [color] => LILAC BLOTCHED 6
-    [owner] => Липатова А.
-    [breeder] => Милакова Е.
+    [color] => Шоколадный триколор 
+    [owner] => Макарекин А.q
+    [breeder] => Милакова Е.2
 )
-showid: 1ringid: 27dogid: 2action: ИзменитьTable Name: catalog_dog_show_1_ring_27Updated Data: breed: Американский Булли, type_breed: Покет, class_breed: Взрослый, name_dog: LOVE BULLY COUNTRY GLINTVEIN , gender: Кобель, color: LILAC BLOTCHED 6, owner: Липатова А., breeder: Милакова Е.Received POST data: Array
+showid: 1ringid: 27dogid: 3action: ИзменитьTable Name: catalog_dog_show_1_ring_27Updated Data: breed: Американский  Булли, type_breed: Экзот, class_breed: Юниор экзот, name_dog: DEADPOOL, gender: Кобель, color: Шоколадный триколор , owner: Макарекин А.q, breeder: Милакова Е.2Received POST data: Array
 (
     [showid] => 1
     [ringid] => 27
-    [id] => 1
+    [id] => 3
     [action] => Изменить
     [breed] => Американский Булли
-    [type_breed] => Покет
-    [class_breed] => Взрослый
-    [name_dog] => BAILEYS FACE OF WAR
-    [gender] => Сука
-    [color] => WHITE & CHOCOLATE
-    [owner] => Акимов Д,222222222333w
-    [breeder] => Жиевская Н.3243d
+    [type_breed] => Экзот
+    [class_breed] => Юниор экзот
+    [name_dog] => DEADPOOL
+    [gender] => Кобель
+    [color] => Шоколадный триколор 
+    [owner] => Макарекин А.q
+    [breeder] => Милакова Е.2
 )
-showid: 1ringid: 27dogid: 1action: ИзменитьTable Name: catalog_dog_show_1_ring_27Updated Data: breed: Американский Булли, type_breed: Покет, class_breed: Взрослый, name_dog: BAILEYS FACE OF WAR, gender: Сука, color: WHITE &amp; CHOCOLATE, owner: Акимов Д,222222222333w, breeder: Жиевская Н.3243dReceived POST data: Array
+showid: 1ringid: 27dogid: 3action: ИзменитьTable Name: catalog_dog_show_1_ring_27Updated Data: breed: Американский Булли, type_breed: Экзот, class_breed: Юниор экзот, name_dog: DEADPOOL, gender: Кобель, color: Шоколадный триколор , owner: Макарекин А.q, breeder: Милакова Е.2Received POST data: Array
 (
     [showid] => 1
     [ringid] => 27
-    [id] => 1
+    [id] => 16
     [action] => Изменить
     [breed] => Американский Булли
     [type_breed] => Покет
-    [class_breed] => Взрослый
-    [name_dog] => BAILEYS FACE OF WAR
-    [gender] => Сука
-    [color] => WHITE &amp; CHOCOLATE
-    [owner] => Акимов Д
-    [breeder] => Жиевская Н.3243d
-)
-showid: 1ringid: 27dogid: 1action: ИзменитьTable Name: catalog_dog_show_1_ring_27Updated Data: breed: Американский Булли, type_breed: Покет, class_breed: Взрослый, name_dog: BAILEYS FACE OF WAR, gender: Сука, color: WHITE &amp;amp; CHOCOLATE, owner: Акимов Д, breeder: Жиевская Н.3243dReceived POST data: Array
-(
-    [showid] => 1
-    [ringid] => 27
-    [id] => 1
-    [action] => Изменить
-    [breed] => Американский Булли
-    [type_breed] => Покет
-    [class_breed] => Взрослый
-    [name_dog] => BAILEYS FACE OF WAR
-    [gender] => Сука
-    [color] => WHITE &amp;amp; CHOCOLATE
-    [owner] => Акимов Д
-    [breeder] => Жиевская Н.
-)
-showid: 1ringid: 27dogid: 1action: ИзменитьTable Name: catalog_dog_show_1_ring_27Updated Data: breed: Американский Булли, type_breed: Покет, class_breed: Взрослый, name_dog: BAILEYS FACE OF WAR, gender: Сука, color: WHITE &amp;amp;amp; CHOCOLATE, owner: Акимов Д, breeder: Жиевская Н.Received POST data: Array
-(
-    [showid] => 1
-    [ringid] => 27
-    [id] => 7
-    [action] => Изменить
-    [breed] => Американский Булли
-    [type_breed] => Покет
-    [class_breed] => Юниор
-    [name_dog] => DOMINIKA JOCK BULLY
-    [gender] => Сука
-    [color] => Lilac
-    [owner] => Румянцева Анна Юрьевна 
-    [breeder] => Малахова Галина Владимировна 
-)
-showid: 1ringid: 27dogid: 7action: ИзменитьTable Name: catalog_dog_show_1_ring_27Updated Data: breed: Американский Булли, type_breed: Покет, class_breed: Юниор, name_dog: DOMINIKA JOCK BULLY, gender: Сука, color: Lilac, owner: Румянцева Анна Юрьевна , breeder: Малахова Галина Владимировна Received POST data: Array
-(
-    [breed] => Американский Булли
-    [type_breed] => Покет
-    [class_breed] => Юниоор
+    [class_breed] => Класс
     [name_dog] => Кличка
     [gender] => Сука
     [color] => Цвет
     [owner] => Заводчик
     [breeder] => Владелец
-    [edit] => Добавить
 )
-showid: 0ringid: 0dogid: 0action: Received POST data: Array
-(
-    [showid] => 1
-    [ringid] => 27
-    [id] => 6
-    [action] => Изменить
-    [breed] => Французский бульдог
-    [type_breed] => none
-    [class_breed] => Юниор
-    [name_dog] => MAGGIE
-    [gender] => Сука
-    [color] => Blue
-    [owner] => Перькова Е.
-    [breeder] => Квашук С.
-)
-showid: 1ringid: 27dogid: 6action: ИзменитьTable Name: catalog_dog_show_1_ring_27Updated Data: breed: Французский бульдог, type_breed: none, class_breed: Юниор, name_dog: MAGGIE, gender: Сука, color: Blue, owner: Перькова Е., breeder: Квашук С.Received POST data: Array
-(
-    [showid] => 1
-    [ringid] => 28
-    [id] => 1
-    [action] => Изменить
-    [breed] => Американский Булли
-    [type_breed] => Покет
-    [class_breed] => Взрослый
-    [name_dog] => BAILEYS FACE OF WAR
-    [gender] => Сука
-    [color] => WHITE &; CHOCOLATE 
-    [owner] => Акимов Д
-    [breeder] => Жиевская Н.3243d
-)
-showid: 1ringid: 28dogid: 1action: ИзменитьTable Name: catalog_dog_show_1_ring_28Updated Data: breed: Американский Булли, type_breed: Покет, class_breed: Взрослый, name_dog: BAILEYS FACE OF WAR, gender: Сука, color: WHITE &amp;; CHOCOLATE , owner: Акимов Д, breeder: Жиевская Н.3243d
+showid: 1ringid: 27dogid: 16action: ИзменитьTable Name: catalog_dog_show_1_ring_27Updated Data: breed: Американский Булли, type_breed: Покет, class_breed: Класс, name_dog: Кличка, gender: Сука, color: Цвет, owner: Заводчик, breeder: Владелец

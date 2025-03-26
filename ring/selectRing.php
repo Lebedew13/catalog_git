@@ -29,7 +29,8 @@ $createTableSQL = "CREATE TABLE IF NOT EXISTS `$tableName` (
     nameDog VARCHAR(255),
     breeder VARCHAR(255),
     owner VARCHAR(255),
-    position INT(11)
+    position INT(11),
+    sub_position INT (11)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
 $conn->query($createTableSQL);
 

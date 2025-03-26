@@ -123,7 +123,7 @@ foreach($res as $ringList){
 
                 
                 <?php
-            $sql = "SELECT * FROM catalog_dog_show_{$showid}_ring_{$ringid}";
+            $sql = "SELECT * FROM catalog_dog_show_{$showid}_ring_{$ringid} ORDER BY gender ASC";
             $stmt = $conn->prepare($sql);
             $stmt->execute();
             $dogs_in_ring = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
@@ -141,7 +141,7 @@ foreach($res as $ringList){
 
                     echo "<li class='listDog-item flex'>
                     <div class='dog__info flex'>
-                       <p>Кличка: $namedog, класс: $class, тип: $type</p>
+                       <p>Кличка: $namedog, класс: $class, тип: $type, пол: $gender</p>
                     </div>
                     <div class='button__block flex'>
                         <button class='formDogBlock' data-id='modal-$id'></button>

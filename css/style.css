@@ -189,11 +189,12 @@ body{
   flex-direction: row;
   gap: 20px;
   justify-content: center;
+  position: relative;
 }
 
 .main__order{
   width: 20%;
-  flex-direction: column;
+  flex-direction: row;
   gap: 20px;
   padding: 10px;
 
@@ -228,6 +229,7 @@ body{
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  width: 100%;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
@@ -433,27 +435,63 @@ body{
   gap: 10px;
 }
 
-.main__dog{
-  flex-direction: column;
-  gap: 30px;
-}
+
 
 .breed__order{
-  flex-direction: column;
-  gap: 20px;
+  width: 30%;
+  position: relative;
+}
+
+.fixed__order{
+  position: sticky; /* Делаем список фиксированным относительно родителя */
+    top: 0; /* Фиксируем его вверху блока */
+    background: white; /* Чтобы список не был прозрачным */
+    z-index: 2;
+    padding: 5px;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .order__list{
-  gap: 20px;
+  gap: 10px;
   word-wrap: normal;
+  flex-direction: column;
+
 }
 
-.breed-item{
+
+.search__block{
+  width: 100%;
+  flex-direction: column;
+  padding: 20px;
+  align-items: center;
+  gap: 40px;
+}
+
+.add__block{
+  width: 100%;
+  padding: 10px;
+}
+
+.sub-breeds{
+  padding: 5px;
+  gap: 5px;
+  word-wrap: normal;
+  flex-direction: column;
+  padding-left: 20px;
+}
+
+.breed__item-name{
   cursor: pointer;
-
+}
+.breed__item-name:hover{
+  color:#fca311;
 }
 
-.breed-item:hover{
+.subbreed__item-name{
+  cursor: pointer;
+}
+.subbreed__item-name:hover{
   color:#fca311;
 }
 
@@ -550,7 +588,7 @@ h4{
   background-color: rgba(0, 0, 0, 0.5);
   justify-content: center;
   align-items: center;
-  z-index: 2;
+  z-index: 999;
 }
 
 .modal-content {

@@ -6,7 +6,7 @@ include '../functions/selectShow.php';
 
 
 echo "<div class=\"header__links\">
-    <a href='../catalog.php'>На главную</a>
+    <a href='../catalog/catalog.php'>На главную</a>
 </div>";
 
 
