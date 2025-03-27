@@ -1,5 +1,6 @@
 <?php
 include '../connectdb.php'; // Подключение к базе данных
+
 if (!empty($_GET['name_dog']) && !empty($_GET['showid']) && !empty($_GET['ringid'])) {
     $nameDog = trim($_GET['name_dog']);
     $showid = intval($_GET['showid']);
@@ -21,8 +22,19 @@ if (!empty($_GET['name_dog']) && !empty($_GET['showid']) && !empty($_GET['ringid
             echo "<input type='hidden' name='showid' value='" . $showid . "'>";
             echo "<input type='hidden' name='ringid' value='" . $ringid . "'>";
             echo "<input type='hidden' name='breed' value='" . $dog['breed'] . "'>";
+            echo "<input type='hidden' name='type_breed' value='" . $dog['type_breed'] . "'>";
+
             echo "<label for='position'>Новая позиция:</label>";
             echo "<input type='number' name='position' value='" . $dog['position'] . "' required>";
+
+            // Поле sub_position только для Американского булли
+            if ($dog['breed'] == 'Американский Булли') {
+                echo "<label for='sub_position'>Тип: ".$dog['type_breed']."</label>";
+                echo "<label for='sub_position'>".$dog['sub_position'].":</label>";
+                echo "<label for='sub_position'>Новая подпозиция:</label>";
+                echo "<input type='number' name='sub_position' value='" . $dog['sub_position'] . "' >";
+            }
+
             echo "<input type='submit' value='Обновить'>";
             echo "</form>";
 

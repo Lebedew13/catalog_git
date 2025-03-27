@@ -118,4 +118,49 @@ showid: 1ringid: 27dogid: 3action: ИзменитьTable Name: catalog_dog_show_
     [owner] => Заводчик
     [breeder] => Владелец
 )
-showid: 1ringid: 27dogid: 16action: ИзменитьTable Name: catalog_dog_show_1_ring_27Updated Data: breed: Американский Булли, type_breed: Покет, class_breed: Класс, name_dog: Кличка, gender: Сука, color: Цвет, owner: Заводчик, breeder: Владелец
+showid: 1ringid: 27dogid: 16action: ИзменитьTable Name: catalog_dog_show_1_ring_27Updated Data: breed: Американский Булли, type_breed: Покет, class_breed: Класс, name_dog: Кличка, gender: Сука, color: Цвет, owner: Заводчик, breeder: ВладелецReceived POST data: Array
+(
+    [showid] => 1
+    [ringid] => 42
+    [id] => 14
+    [action] => Изменить
+    [breed] => Американский Булли
+    [type_breed] => Классик
+    [class_breed] => Юниор макси
+    [name_dog] => GOLDEN PRINCE MANGO
+    [gender] => Кобель
+    [color] => Lilac tri
+    [owner] => Молчанова Наталья 
+    [breeder] => Фаткулина Ирина 
+)
+showid: 1ringid: 42dogid: 14action: ИзменитьTable Name: catalog_dog_show_1_ring_42Updated Data: breed: Американский Булли, type_breed: Классик, class_breed: Юниор макси, name_dog: GOLDEN PRINCE MANGO, gender: Кобель, color: Lilac tri, owner: Молчанова Наталья , breeder: Фаткулина Ирина Received POST data: Array
+(
+    [showid] => 1
+    [ringid] => 43
+    [id] => 14
+    [action] => Изменить
+    [breed] => Американский Булли
+    [type_breed] => Классик
+    [class_breed] => Юниор макси
+    [name_dog] => GOLDEN PRINCE MANGO
+    [gender] => Кобель
+    [color] => Lilac tri
+    [owner] => Молчанова Наталья 
+    [breeder] => Фаткулина Ирина 
+)
+showid: 1ringid: 43dogid: 14action: ИзменитьTable Name: catalog_dog_show_1_ring_43Updated Data: breed: Американский Булли, type_breed: Классик, class_breed: Юниор макси, name_dog: GOLDEN PRINCE MANGO, gender: Кобель, color: Lilac tri, owner: Молчанова Наталья , breeder: Фаткулина Ирина Received POST data: Array
+(
+    [showid] => 1
+    [ringid] => 43
+    [id] => 19
+    [action] => Изменить
+    [breed] => Американский Булли
+    [type_breed] => Классик
+    [class_breed] => 
+    [name_dog] => BULLY COMPANY KARABAS BARABAS
+    [gender] => Кобель
+    [color] => Лиловый
+    [owner] => Рахуба Елена
+    [breeder] => Яковлева Лидия 
+)
+showid: 1ringid: 43dogid: 19action: ИзменитьTable Name: catalog_dog_show_1_ring_43Updated Data: breed: Американский Булли, type_breed: Классик, class_breed: , name_dog: BULLY COMPANY KARABAS BARABAS, gender: Кобель, color: Лиловый, owner: Рахуба Елена, breeder: Яковлева Лидия 

@@ -501,7 +501,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 WHEN 'Взрослые' THEN 8
                 WHEN 'Зрелые' THEN 9
                 ELSE 999
-                END, type_breed, gender";
+                END, type_breed, gender, number_pp ASC";
 
             $result = $conn->query($sql);
 
@@ -510,6 +510,7 @@ document.addEventListener("DOMContentLoaded", function() {
             
 
             while ($dog = $result->fetch_assoc()) {
+                $number_pp = $dog['number_pp'];
                 $breed = trim($dog['breed']);
                 $class = trim($dog['class_breed']); 
                 $type = trim($dog['type_breed']);
@@ -535,7 +536,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 $dogs_by_breed[$breed][$type][$class][$gender][] = $dog;
             }
             
-            $counter = 1;
+            //$counter = 1;
             foreach ($dogs_by_breed as $breed => $types) {
                 echo "<div class='breed__section'>";
                 echo "<h2 id='$breed'>Порода: " . htmlspecialchars($breed) . "</h2>";
@@ -550,10 +551,11 @@ document.addEventListener("DOMContentLoaded", function() {
                         foreach ($genders as $gender => $dogs) {
                             echo "<h5>Пол: " . ($gender == 'Сука' ? 'Сука' : 'Кобель') . "</h5>"; // Печатаем пол
                             foreach ($dogs as $dog) {
+                                $number_pp = $dog['number_pp'];
                                 $id = $dog['id'];
                                 echo "<div class='dog-item flex'>";
                                 echo "<div class='dog__text flex'>
-                                        <p><strong>".htmlspecialchars($counter)."</strong></p>
+                                        <p><strong>".$number_pp."</strong></p>
                                         <p><strong>Кличка:</strong> " . htmlspecialchars($dog['nameDog']) . "</p>
                                     </div>";
                                 echo "<div class='dog__info flex'>
@@ -608,7 +610,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                         </form>   
                                     </div>
                                 </div>";
-                                $counter++;
+                                //$counter++;
                             }
                         }
                     }
