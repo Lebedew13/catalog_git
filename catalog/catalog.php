@@ -442,7 +442,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 <input class="main__form-input" type="submit" value="Найти собаку">
                             </form>
 
-                            <div id="search-results" class="dog__info">
+                            <div id="search-results" class="dog__result-text">
                                 <p>Здесь отобразятся результаты поиска...</p>
                             </div>
                         </div>
@@ -507,10 +507,20 @@ document.addEventListener("DOMContentLoaded", function() {
 
             $dogs_by_breed = [];
 
+            function formatName($name) {
+                $parts = explode(' ', $name);
+                $formatted = $parts[0]; // Фамилия полностью
+                if (isset($parts[1])) {
+                    $formatted .= ' ' . mb_substr($parts[1], 0, 1) . '.'; // Первая буква имени
+                }
+                if (isset($parts[2])) {
+                    $formatted .= ' ' . mb_substr($parts[2], 0, 1) . '.'; // Первая буква отчества
+                }
+                return $formatted;
+            }
             
 
             while ($dog = $result->fetch_assoc()) {
-                $number_pp = $dog['number_pp'];
                 $breed = trim($dog['breed']);
                 $class = trim($dog['class_breed']); 
                 $type = trim($dog['type_breed']);
@@ -536,9 +546,11 @@ document.addEventListener("DOMContentLoaded", function() {
                 $dogs_by_breed[$breed][$type][$class][$gender][] = $dog;
             }
             
-            //$counter = 1;
+            $counter = 1; // Счетчик начинается с 1
+           
+            
             foreach ($dogs_by_breed as $breed => $types) {
-                echo "<div class='breed__section'>";
+                echo "<ul class='breed__section list-reset flex'>";
                 echo "<h2 id='$breed'>Порода: " . htmlspecialchars($breed) . "</h2>";
                 
                 foreach ($types as $type => $classes) {
@@ -551,24 +563,38 @@ document.addEventListener("DOMContentLoaded", function() {
                         foreach ($genders as $gender => $dogs) {
                             echo "<h5>Пол: " . ($gender == 'Сука' ? 'Сука' : 'Кобель') . "</h5>"; // Печатаем пол
                             foreach ($dogs as $dog) {
-                                $number_pp = $dog['number_pp'];
                                 $id = $dog['id'];
-                                echo "<div class='dog-item flex'>";
+                                $breeder = $dog['breeder'];
+                                $owner = $dog['owner'];
+
+                              
+
+
+                                // Обновляем порядок отображения (display_order)
+                                $update_display_order = "UPDATE catalog_dog_show_{$showid}_ring_{$ringid} SET number_pp = ? WHERE id = ?";
+                                $stmt_update = $conn->prepare($update_display_order);
+                                $stmt_update->bind_param('ii', $counter, $id);
+                                $stmt_update->execute();
+            
+                                // Отладочная информация
+                    
+            
+                                echo "<li class='dog-item flex'>";
                                 echo "<div class='dog__text flex'>
-                                        <p><strong>".$number_pp."</strong></p>
-                                        <p><strong>Кличка:</strong> " . htmlspecialchars($dog['nameDog']) . "</p>
+                                        <p><strong>".htmlspecialchars($counter)."</strong></p>
+                                        <p><strong>Кличка:</strong><a href='../dog/dogList.php?id=".$id."&showid=".$showid."&ringid=".$ringid."'>" . htmlspecialchars($dog['nameDog']) . "</a></p>
                                     </div>";
                                 echo "<div class='dog__info flex'>
                                 <p><strong>Окрас:</strong> " . htmlspecialchars($dog['color']) . "</p>
-                                <p><strong>Владелец:</strong> " . htmlspecialchars($dog['owner']) . "</p>
-                               <p><strong>Заводчик:</strong> " . htmlspecialchars($dog['breeder']) . "</p>
+                                <p><strong>Владелец:</strong> " . formatName($breeder) . "</p>
+                               <p><strong>Заводчик:</strong> " . formatName($owner). "</p>
                                 </div>";
                                 echo "<div class='button__block flex'>
                                     <button class='formDogBlock' data-id='modal-$id'></button>
                                     <input class='deleteDog' id='dog-row-$id' data-id='$id' data-showid='$showid' data-ringid='$ringid' type='submit' name='action' value=''>
                                 </div>";
-                                
-                                echo "</div>";
+            
+                                echo "</li>";
                                 echo "<!-- Модальное окно -->
                                 <div id='modal-$id' class='modal'>
                                     <div class='modal-content'>
@@ -584,25 +610,25 @@ document.addEventListener("DOMContentLoaded", function() {
                                             <input class='main__form-input' type='text' id='type_breed' name='type_breed' value='".htmlspecialchars ($dog['type_breed'])."'>
                                             <label for='class_breed'>Класс</label>
                                             <input class='main__form-input' type='text' id='class_breed' name='class_breed' value='".htmlspecialchars ($dog['class_breed'])."'>
-                            
+                                        
                                             <label for='name_dog'>Кличка</label>
                                             <input class='main__form-input' type='text' id='name_dog' name='name_dog' value='".htmlspecialchars ($dog['nameDog'])."'>
-                            
+                                        
                                             <label for='gender'>Пол</label>
                                             <select class='main__form-input' id='gender' name='gender'>
                                                 <option value='Сука' " . (htmlspecialchars ($gender) == 'Сука' ? 'selected' : '') . ">Сука</option>
                                                 <option value='Кобель' " . (htmlspecialchars ($gender) == 'Кобель' ? 'selected' : '') . ">Кобель</option>
                                             </select>
-                            
+                                        
                                             <label for='color'>Цвет</label>
                                             <input class='main__form-input' type='text' id='color' name='color' value='".htmlspecialchars ($dog['color'])."'>
-                            
+                                        
                                             <label for='owner'>Владелец</label>
                                             <input class='main__form-input' type='text' id='owner' name='owner' value='".htmlspecialchars ($dog['owner'])."'>
-                            
+                                        
                                             <label for='breeder'>Заводчик</label>
                                             <input class='main__form-input' type='text' id='breeder' name='breeder' value='".htmlspecialchars ($dog['breeder'])."'>
-
+            
                                             <div class='button__block flex'>  
                                                 <input class='main__form-input' data-action='Изменить' type='submit' name='action' value='Изменить'>
                                                 <input class='main__form-input' data-action='Удалить' type='submit' name='action' value='Удалить'>
@@ -610,13 +636,16 @@ document.addEventListener("DOMContentLoaded", function() {
                                         </form>   
                                     </div>
                                 </div>";
-                                //$counter++;
+            
+                                $counter++;
                             }
                         }
                     }
                 }
-                echo "</div>"; 
+                echo "</ul>"; 
             }
+            
+ 
             ?>
         </div>
                 </div>

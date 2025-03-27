@@ -417,12 +417,20 @@ body{
 }
 
 .dog-item{
-  margin-bottom: 20px;
   flex-direction: row;
   justify-content: space-between;
   padding: 20px 10px 10px 10px;
   position: relative;
   align-items: center;
+}
+
+
+.dog__search-list{
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  width: 100%;
+
 }
 
 .dog__text{
@@ -431,8 +439,10 @@ body{
 }
 
 .dog__info{
+
   font-size: 12px;
   gap: 10px;
+
 }
 
 
@@ -440,6 +450,11 @@ body{
 .breed__order{
   width: 30%;
   position: relative;
+}
+
+.breed__section{
+  flex-direction: column;
+  gap: 20px;
 }
 
 .fixed__order{
@@ -549,9 +564,9 @@ h4{
 .button__block{
   display: flex;
   flex-direction: row;
-  gap: 20px;
-  position: relative;
+  gap: 10px;
   z-index: 0;
+
 }
 
 .listDog{
@@ -683,8 +698,8 @@ h4{
 
 .formDogBlock{
   background-image: url('../image/edit.png');
-  width: 50px;
-  height: 50px;
+  width: 30px;
+  height: 30px;
   background-size: 20px;
   background-repeat: no-repeat;
   background-position: center;
@@ -692,16 +707,13 @@ h4{
   background-color: transparent;
   outline: none;
   cursor: pointer;
-  position: absolute;
-  top: 0;
-  right: 50px;
   z-index: 0;
 }
 
 .deleteDog{
   background-image: url('../image/delete.png');
-  width: 50px;
-  height: 50px;
+  width: 30px;
+  height: 30px;
   background-size: 20px;
   background-repeat: no-repeat;
   background-position: center;
@@ -709,8 +721,54 @@ h4{
   background-color: transparent;
   outline: none;
   cursor: pointer;
-  position: absolute;
-  top: 0;
-  right: 0px;
   z-index: 0;
+}
+
+
+.position-form{
+  flex-direction: column;
+  gap: 10px;
+} 
+
+.dog__result-text{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+
+}
+
+
+.dogs__contain{
+  width: 100%;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dogs__links{
+  width: 100%;
+  margin: 0 auto;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.dogs__contain-text{
+  width: 100%;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dogs__aboute-list{
+  flex-direction: row;
+  gap: 20px;
+  justify-content: space-around;
+
+}
+
+.dogs__aboute{
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
 }
