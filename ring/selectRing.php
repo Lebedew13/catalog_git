@@ -62,6 +62,6 @@ while ($dog = $dogList->fetch_assoc()) {
 }
 
 // Перенаправляем на страницу редактирования каталога
-header("Location: editcatalog.php?showid=$showid&ringid=$ringid");
+header("Location: ../lists/listsDog.php?showid=$showid&ringid=$ringid");
 exit();
 ?>

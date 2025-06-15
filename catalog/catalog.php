@@ -25,7 +25,7 @@ $show = $conn->query($sql);
 $sql1 = "SELECT * FROM experts WHERE show_id = '{$showid}'";
 $expets = $conn->query($sql1);
 
-$query = "SELECT breed, type_breed, MIN(id)  as id FROM `catalog_dog_show_{$showid}_ring_{$ringid}` GROUP BY breed, type_breed ORDER BY position, sub_position ASC";
+$query = "SELECT breed, class_breed, type_breed, MIN(id)  as id FROM `catalog_dog_show_{$showid}_ring_{$ringid}` GROUP BY breed, class_breed, type_breed ORDER BY position, sub_position ASC";
 
 $breed = $conn->query($query);
 
@@ -383,51 +383,84 @@ document.addEventListener("DOMContentLoaded", function() {
                
                 <div class="main__dog flex">
                 <div class="breed__order ">
-                    <div class="fixed__order flex">
-                    <h2>Порядок пород</h2>
-                <?php
-                $breedsList = []; // Для группировки пород и подтипов
+                <div class="fixed__order flex">
+    <h2>Порядок пород</h2>
 
-                // Группируем данные по породам и их подтипам
-                            // Группируем данные по породам и их подтипам
-                foreach ($breed as $dog) {
-                    $breedName = trim($dog['breed']);      // Название породы
-                    $typeName = trim($dog['type_breed']);  // Подтип породы
+    <?php
+    $juniorBreedsList = [];
+    $adultBreedsList = [];
 
-                    // Если порода еще не добавлена, создаем для неё массив
-                    if (!isset($breedsList[$breedName])) {
-                        $breedsList[$breedName] = [];
-                    }
+    foreach ($breed as $dog) {
+        $breedName = trim($dog['breed']);
+        $typeName = trim($dog['type_breed']);
+        $className = trim($dog['class_breed']);
 
-                    // Если подтип не "none" и не пустой, добавляем его в массив для этой породы
-                    if ($typeName !== "none" && !empty($typeName)) {
-                        if (!in_array($typeName, $breedsList[$breedName])) {
-                            $breedsList[$breedName][] = $typeName;
-                        }
-                    }
-                }
-                ?>
+        // определяем — взрослый или младший класс
+        if (stripos($className, 'Взрослые') !== false || stripos($className, 'Зрелые (2+)') !== false) {
+            // Для взрослых
+            if (!isset($adultBreedsList[$breedName])) {
+                $adultBreedsList[$breedName] = [];
+            }
+            $targetList = &$adultBreedsList[$breedName];
+        } else {
+            // Для младших
+            if (!isset($juniorBreedsList[$breedName])) {
+                $juniorBreedsList[$breedName] = [];
+            }
+            $targetList = &$juniorBreedsList[$breedName];
+        }
 
-                <ul id="sortable-list" class="order__list list-reset flex">
-                    <input type="hidden" value="<?php echo $showid ?>" id="showid">
-                    <input type="hidden" value="<?php echo $ringid ?>" id="ringid">
-                    <?php foreach ($breedsList as $breed => $types): ?>
-                        <li class="breed-item" data-breed="<?= htmlspecialchars($breed); ?>">
-                            
-                            <a class="breed__item-name" href="#<?php echo $breed ?>"><?= htmlspecialchars($breed); ?></a>
-                            <?php if (!empty($types)): // Если есть подтипы ?>
-                                <ul id="sub-breeds" class="sub-breeds list-reset flex">
-                                    <?php foreach ($types as $type): ?>
-                                        <li class="sub-breed" data-sub-breed="<?= htmlspecialchars($type); ?>">
-                                            <a class="subbreed__item-name" href="#<?php echo $type ?>"><?= htmlspecialchars($type); ?></a>
-                                        </li>
-                                    <?php endforeach; ?>
-                                </ul>
-                            <?php endif; ?>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
+        if ($typeName !== "none" && !empty($typeName)) {
+            if (!in_array($typeName, $targetList)) {
+                $targetList[] = $typeName;
+            }
+        }
+    }
+    ?>
 
+    <!-- Младшие группы -->
+    <div class="order__block">
+        <h3>Младшие группы</h3>
+        <ul id="sortable-junior" class="order__list list-reset flex">
+            <input type="hidden" value="<?php echo $showid ?>" id="showid">
+            <input type="hidden" value="<?php echo $ringid ?>" id="ringid">
+            <?php foreach ($juniorBreedsList as $breed => $types): ?>
+                <li class="breed-item" data-breed="<?= htmlspecialchars($breed); ?>">
+                    <a class="breed__item-name" href="#<?php echo $breed ?>"><?= htmlspecialchars($breed); ?></a>
+                    <?php if (!empty($types)): ?>
+                        <ul class="sub-breeds list-reset flex">
+                            <?php foreach ($types as $type): ?>
+                                <li class="sub-breed" data-sub-breed="<?= htmlspecialchars($type); ?>">
+                                    <a class="subbreed__item-name" href="#<?php echo $type ?>"><?= htmlspecialchars($type); ?></a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+
+    <!-- Взрослые и зрелые группы -->
+    <div class="order__block">
+        <h3>Взрослые и зрелые группы</h3>
+        <ul id="sortable-adult" class="order__list list-reset flex">
+            <?php foreach ($adultBreedsList as $breed => $types): ?>
+                <li class="breed-item" data-breed="<?= htmlspecialchars($breed); ?>">
+                    <a class="breed__item-name" href="#<?php echo $breed ?>"><?= htmlspecialchars($breed); ?></a>
+                    <?php if (!empty($types)): ?>
+                        <ul class="sub-breeds list-reset flex">
+                            <?php foreach ($types as $type): ?>
+                                <li class="sub-breed" data-sub-breed="<?= htmlspecialchars($type); ?>">
+                                    <a class="subbreed__item-name" href="#<?php echo $type ?>"><?= htmlspecialchars($type); ?></a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
                 <button id="saveOrder" class="main__form-button">Сохранить порядок</button>
                 <button id="modal__search" class="main__form-button search__dog">Найти собаку</button>
                 <div class="modal" id='modal-search'>

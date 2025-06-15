@@ -472,10 +472,13 @@ body{
   gap: 10px;
   word-wrap: normal;
   flex-direction: column;
-  max-height: 450px;
+  max-height: 300px;
   overflow-y: scroll;
 }
 
+.order__block{
+  max-height: 350px;
+}
 
 .search__block{
   width: 100%;
