@@ -9,7 +9,6 @@ include '../connectdb.php';
 require_once '../vendor/autoload.php';
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\IOFactory;
-use PhpOffice\PhpWord\SimpleType\Jc;
 
 $showid = $_SESSION['showid'] ?? null;
 $ringid = $_SESSION['ringid'] ?? null;
@@ -45,6 +44,7 @@ while ($row = $result->fetch_assoc()) {
     }
     $breeds[$breed][] = $row;
     // var_dump($row);
+    $class = $row['class_breed'];
 }
 
 // Создаем Word документ
@@ -59,6 +59,34 @@ $breedStyle = ['underline' => 'single', 'bold' => true, 'size' => 14];
 $nameStyle = ['bold' => true, 'size' => 12];
 $infoStyle = ['size' => 12];
 $underTextstyle = ['size' => 7, 'align' => 'center'];
+function sortClassesCustom($a, $b) {
+    $order = [
+        'Бэби' => 1,
+        'Щенки' => 2, 'Щенок' => 2, 
+        'Щенки мини' => 3, 'Щенок мини' => 3, 
+        'Щенки макси' => 4, 'Щенок макси' => 4, 
+        'Щенки экзот' => 5, 'Щенок экзот' => 5, 
+        'Юниоры' => 6, 'Юниор' => 6,
+        'Юниоры мини' => 7, 'Юниор мини' => 7,
+        'Юниоры макси' => 8, 'Юниор макси' => 8,
+        'Юниоры экзот' => 9, 'Юниор экзот' => 9,
+        'Взрослые' => 10, 'Взрослый' => 10,
+        'Зрелые' => 11, 'Зрелые (2+)' => 11, '2+' => 11,
+    ];
+
+    // Функция определяет приоритет по первым словам
+    $getWeight = function ($class) use ($order) {
+        foreach ($order as $prefix => $weight) {
+            if (mb_stripos($class, $prefix) === 0) {
+                return $weight;
+            }
+        }
+        return 999; // если не найдено — в конец
+    };
+
+    return $getWeight($a) <=> $getWeight($b);
+}
+
 function cmToTwip($cm) {
     return (int)($cm * 567);
 }
@@ -81,66 +109,61 @@ function cmToTwip($cm) {
     $cell->addText('Ринг:  '.htmlspecialchars($ring_arr['name_ring'] . ' - '.htmlspecialchars($experts_arr['lastname']). ' '.htmlspecialchars($experts_arr['firstname']) ), $titleStyle,  ['align' => 'center']);
 // Для каждой собаки
 
+// Теперь проходим по породам
+foreach ($breeds as $breedName => $dogs) {
+    // Определяем уникальные классы
+    $classes = array_unique(array_column($dogs, 'class_breed'));
+    usort($classes, 'sortClassesCustom');
+    foreach ($classes as $class) {
+        // Фильтруем собак по классу
+        $dogsInClass = array_filter($dogs, function ($dog) use ($class) {
+            return $dog['class_breed'] === $class;
+        });
 
+        // Группируем по полу: сначала суки, потом кобели
+        $genders = ['Сука', 'Кобель'];
 
-// Классы сортировать по порядку вручную
-$classOrder = ['Бэби', 'Щенки', 'Юниор', 'Взрослые', 'Зрелые'];
+        foreach ($genders as $gender) {
+            // Фильтруем по полу
+            $dogsByGender = array_filter($dogsInClass, function ($dog) use ($gender) {
+                return mb_strtolower(trim($dog['gender'])) === mb_strtolower($gender);
+            });
 
-foreach ($breeds as $breedName => $dogsByBreed) {
-    // Сортируем по классам
-    usort($dogsByBreed, function($a, $b) use ($classOrder) {
-        return array_search($a['class_breed'], $classOrder) <=> array_search($b['class_breed'], $classOrder);
-    });
-
-    // Группировка: класс → тип → пол
-    $grouped = [];
-    foreach ($dogsByBreed as $dog) {
-        $grouped[$dog['class_breed']][$dog['type_breed']][$dog['gender']][] = $dog;
-    }
-
-    // Создаём таблицу
-    $table = $section->addTable([
-        'borderSize' => 0,
-        'cellMargin' => 30,
-    ]);
-
-    // Порода
-    $table->addRow();
-    $table->addCell(11000)->addText(mb_strtoupper(htmlspecialchars($breedName)), ['bold' => true, 'size' => 14]);
-
-    foreach ($grouped as $class => $types) {
-        foreach ($types as $type => $genders) {
-            foreach ($genders as $gender => $dogs) {
-
-                // Класс + тип
-                $table->addRow();
-                $table->addCell(11000)->addText(mb_strtoupper(htmlspecialchars($class) . ' ' . htmlspecialchars($type)), ['bold' => true, 'size' => 12]);
-
-                // Пол
-                $table->addRow();
-                $table->addCell(11000)->addText(mb_strtoupper(htmlspecialchars($gender)), ['bold' => true, 'size' => 12]);
-
-                // По каждой собаке
-                foreach ($dogs as $index => $dog) {
-                    $table->addRow();
-                    $table->addCell(11000)->addText(($index + 1), ['bold' => true, 'size' => 12]);
-
-                    $table->addRow();
-                    $table->addCell(11000)->addText(htmlspecialchars($dog['nameDog']), ['size' => 12]);
-
-                    // цветовая розетка (color)
-                    if (!empty($dog['color'])) {
-                        $table->addRow();
-                        $table->addCell(11000)->addText('Маленькая ' . mb_strtolower(htmlspecialchars($dog['color'])), ['italic' => true, 'size' => 12]);
-                    }
-
-                    $table->addRow(); // пустая строка
-                }
+            if (count($dogsByGender) === 0) {
+                continue; // пропустить, если нет собак этого пола
             }
+
+            // Создаём таблицу для каждого блока: порода → класс → пол
+            $table = $section->addTable([
+                'borderSize' => 0,
+                'cellMargin' => 30,
+            ]);
+
+            // Порода
+            $table->addRow();
+            $table->addCell(11000)->addText(mb_strtoupper($breedName), ['bold' => true, 'size' => 14]);
+
+            // Класс
+            $table->addRow();
+            $table->addCell(11000)->addText(mb_strtoupper($class), ['bold' => true, 'size' => 14]);
+
+            // Пол
+            $table->addRow();
+            $table->addCell(11000)->addText(mb_strtoupper($gender), ['bold' => true, 'size' => 12]);
+
+            // Места — не более 3
+            $i = 1;
+            foreach ($dogsByGender as $dog) {
+                if ($i > 3) break;
+                $table->addRow();
+                $table->addCell(11000)->addText((string)$i, ['bold' => true, 'size' => 12]);
+                $i++;
+            }
+
+            // // Отступ после блока пола
+            // $section->addTextBreak(1);
         }
     }
-
-    $section->addTextBreak();
 }
 
 
