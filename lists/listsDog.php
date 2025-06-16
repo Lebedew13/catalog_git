@@ -171,9 +171,9 @@ displayDogs($adultDogs, $number, $currentBreed, $currentClass, $currentSex);
 </form>
 </div>
 
-<!-- <form action="generate_vedomost.php" method="post">
+<form action="generate_vedomost.php" method="post">
     <button type="submit">Сформировать  ведомость победителей скачать Word</button>
-</form> -->
+</form>
                 </div>
             </div>
         </div>

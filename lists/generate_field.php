@@ -34,13 +34,13 @@ if (!$result) {
 
 // Создаем Word документ
 $phpWord = new PhpWord();
-
+$phpWord->setDefaultFontName('Century Schoolbook');
 // Стиль заголовков
-$titleStyle = ['bold' => true, 'size' => 16];
+$titleStyle = ['bold' => true, 'size' => 14];
 $subTitleStyle = ['bold' => true, 'size' => 14];
 $expertStyle = ['size' => 12];
-$textStyle = ['size' => 12, 'align' => 'center'];
-$breedStyle = ['underline' => 'single', 'bold' => true, 'size' => 14];
+$textStyle = ['size' => 10.5, 'align' => 'center', 'bold' => true];
+$breedStyle = ['underline' => 'single', 'bold' => true, 'size' => 8, 'font' => 'Calibri'];
 $nameStyle = ['bold' => true, 'size' => 12];
 $infoStyle = ['size' => 12];
 $underTextstyle = ['size' => 7, 'align' => 'center'];
@@ -55,17 +55,27 @@ foreach ($result as $dog) {
     'marginRight' => cmToTwip(0.4),
     'marginBottom' => cmToTwip(0.2)
     ]);
-
-  
+$youngClasses = ['Щенки', 'Щенки мини', 'Щенки макси', 'Щенки экзот','Щенок мини','Щенок экзот', 'Щенок макси', 'Бэби', 'Юниор', 'Юниор мини',  'Юниор макси', 'Юниоры', 'Юниор экзот'];
+  $dateFormatted = date('d.m.Y', strtotime($show_arr['date_show']));
     // Шапка
     if($dog['breed'] == 'Американский Булли'){
-    $section->addText(htmlspecialchars($show_arr['city_show']). '                        '. htmlspecialchars($show_arr['date_show']), $titleStyle);
+    $section->addText(htmlspecialchars($show_arr['city_show']). '          '. mb_strtoupper($ring_arr['name_ring']) .'              '. $dateFormatted,  $titleStyle, ['align' => 'center']);
     $section->addTextBreak();
-    $section->addText('Порода: ' . htmlspecialchars($dog['breed']), $titleStyle);
-    $section->addText('№________, Пол      '. htmlspecialchars($dog['gender']).', Класс         '.htmlspecialchars($dog['class_breed']), $titleStyle);
-    $section->addText('Оценка: отл▢ оч.хор.▢ хор.▢ 1▢ 2▢ 3▢ Титулы Булли: ЛКК▢ ЛСК▢ ЛКТ▢ ЛСТ▢', $textStyle);
-    $section->addText('дисквал▢ без оценки▢                     без титула▢                                ПТ▢ ЛПП▢', $textStyle);
+    $section->addText('Порода:   _____' . htmlspecialchars(mb_strtoupper($dog['breed'])).'_________________________________', $titleStyle);
+    $section->addText('№   __'.mb_strtoupper($dog['id']).'___         Пол        ___'. htmlspecialchars(mb_strtoupper($dog['gender'])).'___        Класс         ___'.htmlspecialchars($dog['class_breed']).'____', $titleStyle);
+   if (in_array($dog['class_breed'], $youngClasses)) {
+    
+     $section->addText('Оценка: отл▢     оч.хор.▢      хор.▢     1▢ 2▢ 3▢           Титулы : ЛКК▢     ЛСК▢        ПК▢', $textStyle);
+     $section->addText('дисквал▢ без оценки▢                     без титула▢ ', $textStyle);
+     $section->addText('ЛКК – Лучший кобель класса ЛСК – Лучшая сука класса ПК - победитель класса', $underTextstyle);
+    }else{
+       $section->addText('Оценка: отл▢     оч.хор.▢      хор.▢     1▢ 2▢ 3▢           Титулы Булли: ЛКК▢     ЛСК▢     ЛКТ▢     ЛСТ▢', $textStyle);
+    $section->addText('дисквал▢               без оценки▢                     без титула▢                             ПТ(Лт)▢ ЛПП▢', $textStyle);
     $section->addText('ЛКК – Лучший кобель класса ЛСК – Лучшая сука класса ЛКТ – Лучший кобель типа ЛСТ – Лучшая сука типа  ПТ- Победитель типа ЛПП – Лучший представитель породы', $underTextstyle);
+    }
+  
+  
+    
     $section->addText('Описание', $titleStyle);
     
    $table = $section->addTable([
@@ -74,13 +84,22 @@ foreach ($result as $dog) {
     'cellMargin' => 80,    // внутренние отступы ячейки (80 = 0.5pt примерно)   
 ]);
     }else{
-         $section->addText(htmlspecialchars($show_arr['city_show']). '                        '. htmlspecialchars($show_arr['date_show']), $titleStyle);
+         $section->addText(htmlspecialchars($show_arr['city_show']). '          '. mb_strtoupper($ring_arr['name_ring']) .'              '. $dateFormatted,  $titleStyle, ['align' => 'center']);
     $section->addTextBreak();
-    $section->addText('Порода: ' . htmlspecialchars($dog['breed']), $titleStyle);
-    $section->addText('№________, Пол      '. htmlspecialchars($dog['gender']).', Класс         '.htmlspecialchars($dog['class_breed']), $titleStyle);
-    $section->addText('Оценка: отл▢ оч.хор.▢ хор.▢ 1▢ 2▢ 3▢ Титулы Все породы: ЛКК▢ ЛСК▢ ЛКТ▢ ЛСТ▢', $textStyle);
-    $section->addText('дисквал▢ без оценки▢                     без титула▢                                ПТ▢ ЛПП▢', $textStyle);
-    $section->addText('ЛКК – Лучший кобель класса ЛСК – Лучшая сука класса ЛКТ – Лучший кобель типа ЛСТ – Лучшая сука типа  ПТ- Победитель типа ЛПП – Лучший представитель породы', $underTextstyle);
+    $section->addText('Порода:   _____' . htmlspecialchars(mb_strtoupper($dog['breed'])).'_____', $titleStyle);
+    $section->addText('№   __'.mb_strtoupper($dog['id']).'___         Пол        ___'. htmlspecialchars(mb_strtoupper($dog['gender'])).'___        Класс         ___'.htmlspecialchars($dog['class_breed']).'____', $titleStyle);
+    if (in_array($dog['class_breed'], $youngClasses)) {
+    
+     $section->addText('Оценка: отл▢     оч.хор.▢      хор.▢     1▢ 2▢ 3▢           Титулы : ЛКК▢     ЛСК▢        ПК▢', $textStyle);
+     $section->addText('дисквал▢ без оценки▢                     без титула▢ ', $textStyle);
+     $section->addText('ЛКК – Лучший кобель класса ЛСК – Лучшая сука класса ПК - победитель класса', $underTextstyle);
+    }else{
+        $section->addText('Оценка: отл▢     оч.хор.▢      хор.▢     1▢ 2▢ 3▢           Титулы ВСЕ ПОРОДЫ: ЛКК▢     ЛСК▢     ЛКТ▢     ЛСТ▢', $textStyle);
+         $section->addText('дисквал▢ без оценки▢                     без титула▢                                ПТ▢ ЛПП▢', $textStyle);
+         $section->addText('ЛКК – Лучший кобель класса ЛСК – Лучшая сука класса ЛКТ – Лучший кобель типа ЛСТ – Лучшая сука типа  ПТ- Победитель типа ЛПП – Лучший представитель породы', $underTextstyle);
+    }
+   
+    
     $section->addText('Описание', $titleStyle);
    $table = $section->addTable([
     'borderSize' => 8,     // ширина рамки (8 = 1 пиксель примерно)
@@ -93,7 +112,7 @@ $table->addRow(10800, ['cantSplit' => true]);
 
 // Добавляем одну ячейку, которая занимает всю строку
 $cell = $table->addCell(11000);
-$youngClasses = ['Щенки', 'Щенки мини', 'Щенки макси', 'Щенок мини', 'Щенок макси', 'Бэби', 'Юниор', 'Юниор мини',  'Юниор макси', 'Юниоры', 'Юниор экзот'];
+
 
 if (in_array($dog['class_breed'], $youngClasses)) {
     $cell->addText('Семенники у коб.:                            Прикус:                                         Степень породности:');

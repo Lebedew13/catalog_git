@@ -9,6 +9,7 @@ include '../connectdb.php';
 require_once '../vendor/autoload.php';
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\SimpleType\Jc;
 
 $showid = $_SESSION['showid'] ?? null;
 $ringid = $_SESSION['ringid'] ?? null;
@@ -30,6 +31,20 @@ $experts_arr = $experts->fetch_assoc();
 $result = $conn->query("SELECT * FROM `catalog_dog_show_{$showid}_ring_{$ringid}`");
 if (!$result) {
     die("Ошибка запроса: " . $conn->error);
+}
+
+
+
+$breeds = [];
+
+// Группируем по породам
+while ($row = $result->fetch_assoc()) {
+    $breed = $row['breed'];
+    if (!isset($breeds[$breed])) {
+        $breeds[$breed] = [];
+    }
+    $breeds[$breed][] = $row;
+    // var_dump($row);
 }
 
 // Создаем Word документ
@@ -65,16 +80,71 @@ function cmToTwip($cm) {
     $cell->addText(htmlspecialchars($show_arr['name_show']) .' ' .htmlspecialchars($show_arr['city_show']), $titleStyle, ['align' => 'center']);
     $cell->addText('Ринг:  '.htmlspecialchars($ring_arr['name_ring'] . ' - '.htmlspecialchars($experts_arr['lastname']). ' '.htmlspecialchars($experts_arr['firstname']) ), $titleStyle,  ['align' => 'center']);
 // Для каждой собаки
-foreach ($result as $dog) {
 
 
-    // Добавляем одну строку
+
+// Классы сортировать по порядку вручную
+$classOrder = ['Бэби', 'Щенки', 'Юниор', 'Взрослые', 'Зрелые'];
+
+foreach ($breeds as $breedName => $dogsByBreed) {
+    // Сортируем по классам
+    usort($dogsByBreed, function($a, $b) use ($classOrder) {
+        return array_search($a['class_breed'], $classOrder) <=> array_search($b['class_breed'], $classOrder);
+    });
+
+    // Группировка: класс → тип → пол
+    $grouped = [];
+    foreach ($dogsByBreed as $dog) {
+        $grouped[$dog['class_breed']][$dog['type_breed']][$dog['gender']][] = $dog;
+    }
+
+    // Создаём таблицу
+    $table = $section->addTable([
+        'borderSize' => 0,
+        'cellMargin' => 30,
+    ]);
+
+    // Порода
     $table->addRow();
-    $table->addCell(11000)->addText($dog['breed']);
-    $section->addTextBreak();
-    
+    $table->addCell(11000)->addText(mb_strtoupper(htmlspecialchars($breedName)), ['bold' => true, 'size' => 14]);
 
+    foreach ($grouped as $class => $types) {
+        foreach ($types as $type => $genders) {
+            foreach ($genders as $gender => $dogs) {
+
+                // Класс + тип
+                $table->addRow();
+                $table->addCell(11000)->addText(mb_strtoupper(htmlspecialchars($class) . ' ' . htmlspecialchars($type)), ['bold' => true, 'size' => 12]);
+
+                // Пол
+                $table->addRow();
+                $table->addCell(11000)->addText(mb_strtoupper(htmlspecialchars($gender)), ['bold' => true, 'size' => 12]);
+
+                // По каждой собаке
+                foreach ($dogs as $index => $dog) {
+                    $table->addRow();
+                    $table->addCell(11000)->addText(($index + 1), ['bold' => true, 'size' => 12]);
+
+                    $table->addRow();
+                    $table->addCell(11000)->addText(htmlspecialchars($dog['nameDog']), ['size' => 12]);
+
+                    // цветовая розетка (color)
+                    if (!empty($dog['color'])) {
+                        $table->addRow();
+                        $table->addCell(11000)->addText('Маленькая ' . mb_strtolower(htmlspecialchars($dog['color'])), ['italic' => true, 'size' => 12]);
+                    }
+
+                    $table->addRow(); // пустая строка
+                }
+            }
+        }
+    }
+
+    $section->addTextBreak();
 }
+
+
+
 // Очищаем буфер перед отправкой
 if (ob_get_length()) ob_end_clean();
 
